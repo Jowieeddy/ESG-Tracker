@@ -1,3 +1,4 @@
+from plot_scenario_matrix import plot_scenario_matrix
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
@@ -118,7 +119,7 @@ def plot_energy_forecast(pivot, forecast, ci_lower, ci_upper):
     for col in ["Coal (TWh)", "Gas (TWh)", "Renewables (TWh)"]:
         plt.plot(pivot.index, pivot[col], label=col.replace(" (TWh)", ""))
 
-    forecast_index = pd.period_range(start=pivot.index[-1] + 1, periods=5, freq="Y")
+    forecast_index = pd.period_range(start=pivot.index[-1] + 1, periods=5, freq="Y").to_timestamp()
     plt.plot(forecast_index.year, forecast.values, "r--", label="Gas Forecast", lw=2)
     plt.fill_between(forecast_index.year, ci_lower, ci_upper, color="red", alpha=0.15, label="95% CI")
 
@@ -128,7 +129,9 @@ def plot_energy_forecast(pivot, forecast, ci_lower, ci_upper):
     plt.legend()
     plt.grid(True)
     plt.tight_layout()
-    plt.show()
+    plt.savefig("us_energy_forecast.png")
+    print("✔ saved us_energy_forecast.png")
+
 
     out = pd.DataFrame({
         "Year": forecast_index,
@@ -142,6 +145,7 @@ def plot_energy_forecast(pivot, forecast, ci_lower, ci_upper):
 
 import argparse
 from scenario_model import simulate_green_shifts
+from plot_scenario_matrix import plot_scenario_matrix
 
 def run_pipeline(args):
     energy, co2 = load_data()
@@ -172,6 +176,11 @@ def run_pipeline(args):
         simulate_green_shifts()
         print("✔ Finished simulate_green_shifts()")
 
+    if args.plot_scenarios:
+        print("▶ Plotting scenario matrix...")
+        plot_scenario_matrix()
+        print("✔ Scenario plot saved.")
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="U.S. Energy & Emissions Forecasting Tool")
@@ -179,6 +188,7 @@ if __name__ == "__main__":
     parser.add_argument("--skip-plots", action="store_true", help="Skip generating plots")
     parser.add_argument("--skip-summary", action="store_true", help="Skip generating textual summaries")
     parser.add_argument("--only-baseline", action="store_true", help="Run baseline only without scenario modeling")
-    
+    parser.add_argument("--plot-scenarios", action="store_true", help="Generate and save scenario matrix plot")
+
     args = parser.parse_args()
     run_pipeline(args)
