@@ -1,0 +1,10 @@
+🌿 Green Shift Scenario Comparison
+
+Baseline Gas Forecast: 7985.1 TWh
+Baseline Emissions: 3273.9 Mt CO₂
+Baseline Intensity: 0.297 Mt/TWh
+Baseline Cost: $479,106
+Baseline CO₂ Tax: $327,389
+
+Scenario Comparisons:
+10% shift → Δ Emissions: -327.4 Mt CO₂, Δ Intensity: -0.030, Savings: $15,970, Tax Δ: $32,739

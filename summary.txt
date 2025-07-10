@@ -1,0 +1,7 @@
+📈 ESG Executive Summary
+  Year analyzed: 2023
+  Baseline CO₂ intensity: 0.35 Mt/TWh
+  Avg forecasted gas: 7985.1 TWh
+  Projected total energy: 13314.5 TWh
+  Estimated CO₂ intensity: 0.37 Mt/TWh
+  Δ Intensity vs. baseline: +0.02 Mt/TWh
