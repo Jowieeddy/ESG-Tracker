@@ -10,3 +10,4 @@ summary.txt
 scenario_summary.txt
 fuel_mix_share.png
 gas_acf_pacf.png
+__pycache__/
