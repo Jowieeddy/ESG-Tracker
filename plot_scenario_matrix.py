@@ -1,39 +1,36 @@
 import pandas as pd
 import matplotlib.pyplot as plt
-import seaborn as sns
 
+def plot_scenario_matrix(csv_path="scenario_matrix.csv", save_path="scenario_matrix_plot.png"):
+    # Load the scenario matrix
+    df = pd.read_csv(csv_path)
 
-def plot_scenario_matrix(matrix_csv="scenario_matrix.csv", output_path="scenario_matrix_plot.png"):
-    """Plots emissions, intensity, cost, and CO2 tax across green shift scenarios."""
-    df = pd.read_csv(matrix_csv)
+    # Convert Shift_% to string for better x-axis labeling
+    df["Shift_%"] = df["Shift_%"].astype(str) + "%"
 
-    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
-    plt.suptitle("Green Shift Scenario Matrix", fontsize=16, fontweight="bold")
+    fig, ax1 = plt.subplots(figsize=(12, 6))
 
-    sns.barplot(x="Shift_%", y="Scenario_Emissions", data=df, ax=axes[0, 0], palette="Blues_d")
-    axes[0, 0].set_title("Scenario Emissions (Mt CO₂)")
-    axes[0, 0].set_ylabel("Emissions")
+    # Bar chart for CO₂ Emissions Reduction
+    ax1.bar(df["Shift_%"], df["Delta_Emissions"], color="green", alpha=0.6, label="Δ Emissions (Mt CO₂)")
+    ax1.set_ylabel("Emissions Reduction (Mt CO₂)", color="green")
+    ax1.tick_params(axis='y', labelcolor="green")
+    ax1.set_xlabel("Green Shift Scenario")
 
-    sns.barplot(x="Shift_%", y="Emissions_Intensity", data=df, ax=axes[0, 1], palette="Greens_d")
-    axes[0, 1].set_title("Emissions Intensity (Mt/TWh)")
-    axes[0, 1].set_ylabel("Intensity")
+    # Create second axis for energy cost and tax exposure
+    ax2 = ax1.twinx()
+    ax2.plot(df["Shift_%"], df["Energy_Cost"], color="blue", marker='o', label="Energy Cost ($)")
+    ax2.plot(df["Shift_%"], df["CO2_Tax_Exposure"], color="red", marker='x', label="CO₂ Tax Exposure ($)")
+    ax2.set_ylabel("Cost ($)", color="black")
+    ax2.tick_params(axis='y', labelcolor="black")
 
-    sns.barplot(x="Shift_%", y="Energy_Cost", data=df, ax=axes[1, 0], palette="Oranges_d")
-    axes[1, 0].set_title("Total Energy Cost ($)")
-    axes[1, 0].set_ylabel("Cost")
-
-    sns.barplot(x="Shift_%", y="CO2_Tax_Exposure", data=df, ax=axes[1, 1], palette="Reds_d")
-    axes[1, 1].set_title("CO₂ Tax Exposure ($)")
-    axes[1, 1].set_ylabel("Tax")
-
-    for ax in axes.flatten():
-        ax.set_xlabel("% Gas → Renewables")
-        ax.grid(True, axis="y", linestyle="--", alpha=0.5)
-
-    plt.tight_layout(rect=[0, 0.03, 1, 0.95])
-    plt.savefig(output_path, dpi=300)
-    print(f"✔ Saved scenario matrix chart to {output_path}")
-
+    # Title and legend
+    plt.title("Green Shift Scenario Outcomes")
+    fig.legend(loc="upper center", bbox_to_anchor=(0.5, 1.08), ncol=3)
+    fig.tight_layout()
+    plt.grid(True)
+    plt.savefig(save_path)
+    print(f"✔ Saved plot to {save_path}")
+    plt.close()
 
 if __name__ == "__main__":
     plot_scenario_matrix()
